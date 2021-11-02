@@ -1,0 +1,15 @@
+### Task 2
+
+1. a = 0
+
+2.
+Errors are in row 23~26.
+
+a. The 24. row: array2 do not need free().   because array in stack. And malloc() allocate dynamic memory from heap to array1
+so it need free().
+
+b. And we can not use array1 after free array1, because the memory has been free.
+
+c. The 25. row: array2 is a pointer, it save a value, which is the address of array. so array2 = 321 means change this
+value to 321.
+

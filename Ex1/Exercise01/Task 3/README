@@ -1,0 +1,25 @@
+### Task 3
+
+Errors:
+
+5. row: char classname; //2.should be char*
+char* classname;
+
+13. row: Class cla //3. ;loss
+Class cla;
+
+21. row: allowed_classes = (Class*)malloc(2 * sizeof(Class));// 4. 2 should be 3.
+allowed_classes = (Class*)malloc(3 * sizeof(Class));
+
+37. row: int main(int i)//5. parameter of main function should be (void), or (int argc, char *argv[])
+int main()
+
+52. row: myparty->members[0] = char1;//7. "->" is used in pointer, here we should use "."
+myparty.members[0] = char1;
+
+55. row: printf("%s is a %d\n", char1.name, char1.cla.classname); //8. %d is for int type， here we should use %s
+printf("%s is a %s\n", char1.name, char1.cla.classname);
+
+58. row: free(&classes); //9. should free pointer, not address of pointer
+free(classes);
+

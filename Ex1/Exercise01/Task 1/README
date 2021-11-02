@@ -1,0 +1,9 @@
+### Task 1
+
+>cd /Exercise01/Task\ 1/
+>make
+gcc -c hello.c
+gcc -o hello.exe hello.o
+>./hello.exe
+Hallo, Welt!
+
