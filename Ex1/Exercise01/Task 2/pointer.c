@@ -13,16 +13,16 @@ int main() {
   int *c = array1;
   int *d = &(array1[0]);
 
-  d = b;//d is pointer to a
+  d = b;//d is pointer to a; a=0
   *d = 123; // a = 123
-  a = 42;
-  array1[0] = 42;
-  a = *c + *b;
-  d = 54321;
+  a = 42; //a =42
+  array1[0] = 42;//a =42
+  a = *c + *b;//a =84
+  d = 54321;//a =84
 
-  a = *(c + array2[0]);
-  free(array1);
-  free(array2);
-  array2 = 321;
-  array1[0] = a;
+  a = *(c + array2[0]);//a =42
+  free(array1);//a =42
+  free(array2);//a =42
+  array2 = 321;//a =42
+  array1[0] = a;//a =42
 }
