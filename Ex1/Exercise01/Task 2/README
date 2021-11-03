@@ -17,7 +17,7 @@ Row 26: a = 42
 2.
 Errors are in row 23~26.
 
-a. The 24. row: array2 do not need free().   because array in stack. And malloc() allocate dynamic memory from heap to array1
+a. The 24. row: array2 do not need free().   because array2 in stack. And malloc() allocate dynamic memory from heap to array1
 so it need free().
 
 b. And we can not use array1 after free array1, because the memory has been free.
