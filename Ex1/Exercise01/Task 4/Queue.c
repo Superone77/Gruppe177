@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//define single queueNode
 struct node {
     int value;
     struct node* next;
@@ -8,6 +9,7 @@ struct node {
 
 typedef struct node QueueElement;
 
+//define queue struct
 typedef struct {
     QueueElement* first;
     QueueElement* last;
@@ -39,21 +41,28 @@ int main() {
 
 	return 0;
 }
+
 Queue* Queue_init(int length){
+    //allocates the necessary memory
     Queue* queue = (Queue*)malloc(sizeof (Queue));
+    //sets its maximum length to the transferred value.
     queue->max_length = length;
+    //initializes all fields with NULL.
     queue->actual_length = 0;
     queue->first=NULL;
     queue->last=NULL;
+    returns a new queue
     return queue;
 }
+//create a new element that stores the integer data and adds the new element to the end of the queue.
 int Queue_enqueue(Queue* queue, int value){
+    //If the queue is already full, a warning is issued, a negative value is returned and no new element is created and saved.
     if(queue->max_length==queue->actual_length) return -1;
-    if(queue->actual_length==0){
+    if(queue->actual_length==0){//if the queue is leer, create new first and last node.
         queue->first = (QueueElement*)malloc(sizeof (QueueElement));
         queue->first->value = value;
         queue->last = queue->first;
-    }else {
+    }else {//if the queue is not leer
         QueueElement *queueElement = (QueueElement *) malloc(sizeof(QueueElement));
         queueElement->next = NULL;
         queueElement->value = value;
@@ -61,17 +70,21 @@ int Queue_enqueue(Queue* queue, int value){
         queue->first = queueElement;
     }
     queue->actual_length = (queue->actual_length)+1;
-
+    //The new length of the queue is its return value.
     return queue->actual_length;
 }
+
+//return the first item in the queue and removes it from the queue.
 QueueElement* Queue_dequeue(Queue* queue){
+    // If the queue is empty, NULL is returned.
     if(queue->actual_length==0) return NULL;
     QueueElement* res = queue->last;
     queue->last = queue->last->next;
     queue->actual_length--;
     return res;
-
 }
+
+//output the current length of the queue on the console, as well as the elements it contains, starting with front.
 void Queue_print(Queue* queue){
     int length = queue->actual_length;
     printf("Queue of size %d: ", length);
