@@ -51,13 +51,16 @@ Queue* Queue_init(int length){
     queue->actual_length = 0;
     queue->first=NULL;
     queue->last=NULL;
-    returns a new queue
+    //returns a new queue
     return queue;
 }
 //create a new element that stores the integer data and adds the new element to the end of the queue.
 int Queue_enqueue(Queue* queue, int value){
     //If the queue is already full, a warning is issued, a negative value is returned and no new element is created and saved.
-    if(queue->max_length==queue->actual_length) return -1;
+    if(queue->max_length==queue->actual_length) {
+        printf("Die Warteschlange ist voll! ");
+        return -1;
+    }
     if(queue->actual_length==0){//if the queue is leer, create new first and last node.
         queue->first = (QueueElement*)malloc(sizeof (QueueElement));
         queue->first->value = value;
