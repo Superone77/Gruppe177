@@ -1,6 +1,7 @@
 ### Aufgabe 1
 a)
 bandwidth: Total amount of work done in a given time. 
+
 * Maximum rate at which information can be transfered
 * Aggregate bandwidth - total data bandwidth supplied by network
 * Effective bandwidth - fraction of aggregate bandwidth delivered to an application
@@ -9,7 +10,9 @@ Latency: Time between start and completion of an event
 
 Sending overhead + time of flight + (Packet size / Bandwidth) + receiving overhead \
 b)
-//TODO
+Bandwidth: Shared-media networks
+
+Latency: Switched-media networks
 
 ### Aufgabe 2
 
