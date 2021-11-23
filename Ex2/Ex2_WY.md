@@ -9,7 +9,8 @@ bandwidth: Total amount of work done in a given time.
 Latency: Time between start and completion of an event
 
 Sending overhead + time of flight + (Packet size / Bandwidth) + receiving overhead \
-b)
+b)TODO
+
 Bandwidth: Shared-media networks
 
 Latency: Switched-media networks
@@ -26,7 +27,7 @@ Latency: Switched-media networks
 
 a) \
 Diameter: 9 \
-Knotenpaar: e.g. 1-21
+Knotenpaar: e.g. 0-21, 1-21, 2-21, 3-21, 4-21
 
 Bisection Bandwidth: 300MB/s \
 Group1: 0,1,2,3,4,5,21,23,24,30 \
@@ -43,12 +44,13 @@ b) TODO
 
 
 2. Diameter is high, so that there is big distance for message transfer, which means high latency.
+3. Node connectivity is low, which means the network is easy to disconnected.
 
 ### Aufgabe 4
 TODO
 
 ### Aufgabe 5
-a) \
+a) 
 A thread includes: Thread ID, Program counter, Register set, Stack
 
 b) 
