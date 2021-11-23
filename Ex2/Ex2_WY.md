@@ -55,13 +55,15 @@ A thread includes: Thread ID, Program counter, Register set, Stack
 
 b) 
 1. Each process has its own address space, but threads in the same process share the address space.
-
 2. For this reason, only inter-process communication is actually required. The threads of the same process share the address space. Synchronization/mutual exclusion is required to protect shared global variables.
-
 3. The inter-process communication, whether it is a signal, a pipe, or a shared memory, is guaranteed by the operating system.
-
 4. And network in Communication library also can be used for communication between different devices and processes.  E.g. Socket.
 
-c) TODO
+c) 
 
-d) TODO
+1. When dates need to be created and destroyed frequently, the thread should priority to be used. 
+
+2. When requires more safety, the process should be used.
+
+d)  A hybrid model MPI+X, where X is one of: OpenMP (if accelerators don’t persist), OpenACC, OpenMP 4+ with device constructs, OpenCL, or CUDA. MPI +X combines MPI's and X 's advantages.
+
