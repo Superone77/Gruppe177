@@ -97,6 +97,10 @@ b)
 
 4. And network in Communication library also can be used for communication between different devices and processes.  E.g. Socket.
 
-c) TODO
+c) Firstly, we need to know:\
+1.Process have its own address space, and other processs can not direct access. Threads in same process have the same address space.\
+2.Communication between processes requires specific means for interprocss communication (IPC) to allow processes to exchange data(pipe, shared-mem,sockets, etc). But threads can communicates via shared variables.\
+When considering process running on distinct and potentially distant processors, parallelization with the help of processes is larged used, which is more scalabale. For instance, client-server applications. \
+But when process run on a single processor, parallelization with the help of processes has an important overhead and a communication may require several time consuming data copies. Then we should use parallelization with the help of threads, because it is more space efficient and switch context cheaper.
 
-d) TODO
+d) Because MPI is suitable for data exchange between multiple address spaces, the current mixed programming model is generally MPI+X, that is, MPI is used for inter-node communication, and within the node (single address space), a programming model suitable for single address space is adopted. Corresponds to the hierarchies within and between nodes (multiple address spaces) of high-performance computer nodes.
