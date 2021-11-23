@@ -81,7 +81,7 @@ use collapse clause:
 ```
 
 c) \
-TODO
+no data dependence
 
 
 ### Aufgabe 5
