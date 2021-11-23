@@ -59,9 +59,14 @@ The read of a[3] depends on the write of a[3] in parallel.
 
 change :
 
+```c
+pragma omp parallel for redction(+:sum)
+```
+
 b) \
 Data dependence exists. \
 Example: 
+
 | i = 0| i = 1|
 |----|----|
 |j = 0||
