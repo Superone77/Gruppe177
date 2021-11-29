@@ -56,7 +56,13 @@ a[7] is computed using a[3]'s new value: a[7] = a[3]+1 = 3 \
 a[7] is computed using a[3]'s old value: a[7] = a[3]+1 = 4 \
 The read of a[3] depends on the write of a[3] in parallel.
 
-no change of openMP construct can solve.
+use ordered clause:
+```c
+#pragma omp parallel for ordered
+    for(i = 1;i<100;i++) {
+        a[2*i+1] = a[i]+1;
+    }
+```
 
 
 b) \
@@ -73,6 +79,16 @@ Example:
 |j=1|
 |a[i][j]=a[i][j]+1=2||
 
+| i = 0| i = 1|
+|----|----|
+|j = 0||
+|...||
+|j = 1||
+|a[i][j]=a[i][j]+1=1||
+|j++||
+|j=2|
+|a[i][j]=a[i][j]+1=3||
+
 use collapse clause:
 ```c
 #pragma omp parallel for collapse(2)
@@ -82,7 +98,29 @@ use collapse clause:
 ```
 
 c) \
-no data dependence
+Order of different threads accessing file is random.
+Example:
+
+if i = 0 -> i = 1->...:\
+file: \
+0\
+1\
+...
+
+if i = 1 -> i = 0->...:\
+file:\
+1\
+0\
+...\
+so output file is random too.
+
+single clause:
+```c
+#pragma omp single
+    for(i=0;i<len;++i){
+        fprintf(pfile,"%d\n",A[i]);
+    }
+```
 
 
 ### Aufgabe 5
