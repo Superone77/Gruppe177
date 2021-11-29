@@ -9,11 +9,11 @@ bandwidth: Total amount of work done in a given time.
 Latency: Time between start and completion of an event
 
 Sending overhead + time of flight + (Packet size / Bandwidth) + receiving overhead \
-b)TODO
+b)
 
-Bandwidth: Shared-media networks
+Bandwidth: streaming media
 
-Latency: Switched-media networks
+Latency: online game, video chat, visit the website.
 
 ### Aufgabe 2
 
@@ -23,7 +23,6 @@ Latency: Switched-media networks
 | Anzahl der Verbindungen zwischen allen Switches |64 | 112 | 128 | 2016 |
 
 ### Aufgabe 3
-![](1.png) \
 
 a) \
 Diameter: 9 \
@@ -39,7 +38,7 @@ node: 5, 14
 Node connectivity: 1 \
 Node: 20 or 22 or 23 or 24 or 11 or 13 or 5
 
-b) TODO 
+b) 
 1. Bisection bandwidth is too low(300 MB/s), but several links are 1 Gb/s, which means the throughput is low. 
 
 
@@ -57,11 +56,8 @@ a[7] is computed using a[3]'s new value: a[7] = a[3]+1 = 3 \
 a[7] is computed using a[3]'s old value: a[7] = a[3]+1 = 4 \
 The read of a[3] depends on the write of a[3] in parallel.
 
-change :
+no change of openMP construct can solve.
 
-```c
-pragma omp parallel for redction(+:sum)
-```
 
 b) \
 Data dependence exists. \
@@ -108,4 +104,4 @@ c) Firstly, we need to know:\
 When considering process running on distinct and potentially distant processors, parallelization with the help of processes is larged used, which is more scalabale. For instance, client-server applications. \
 But when process run on a single processor, parallelization with the help of processes has an important overhead and a communication may require several time consuming data copies. Then we should use parallelization with the help of threads, because it is more space efficient and switch context cheaper.
 
-d) Because MPI is suitable for data exchange between multiple address spaces, the current mixed programming model is generally MPI+X, that is, MPI is used for inter-node communication, and within the node (single address space), a programming model suitable for single address space is adopted. Corresponds to the hierarchies within and between nodes (multiple address spaces) of high-performance computer nodes.
+d) Because MPI is suitable for data exchange between multiple address spaces, the current hybird programming model is generally MPI+X, that is, MPI is used for inter-node communication, and within the node (single address space), a programming model suitable for single address space is adopted. Corresponds to the hierarchies within and between nodes (multiple address spaces) of high-performance computer nodes.
