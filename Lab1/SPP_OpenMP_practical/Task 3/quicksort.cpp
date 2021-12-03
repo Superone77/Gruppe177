@@ -66,7 +66,9 @@ void quickSort_par(int64_t* arr, int64_t low, int64_t high) {
 
     // Separately sort elements before
     // partition and after partition
+#pragma omp task firstprivate(arr,low,pi)
     quickSort_par(arr, low, pi - 1);
+#pragma omp task firstprivate(arr,high,pi)
     quickSort_par(arr, pi + 1, high);
   }
 }
@@ -131,7 +133,11 @@ int main(int argc, char* argv[]) {
     auto t1 = high_resolution_clock::now();
 
     // TODO implement parallel call for task a)
-    quickSort_par(arr, 0, n - 1);
+#pragma omp parallel
+      {
+#pragma omp single nowait
+          quickSort_par(arr, 0, n - 1);
+      }
 
     //  Print timing information for this run
     const auto t2        = high_resolution_clock::now();
