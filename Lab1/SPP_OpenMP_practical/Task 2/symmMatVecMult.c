@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #define MATRIXSIZE 12000
+#define VAL 20
 
 ////////// START BLOCK: DO NOT TOUCH ANY CODE IN THIS HELPER FUNCTIONS
 bool checkIfFullMatrixIsCorrect(double** m) {
@@ -14,7 +15,7 @@ bool checkIfFullMatrixIsCorrect(double** m) {
                 return false;
             }
 
-            int targetval = ((i / 2 + 20) * (j / 2 - 20)) % 25;
+            int targetval = ((i / 2 + VAL) * (j / 2 - VAL)) % 25;
             if (i != j && i > j && m[i][j] != targetval) {
                 return false;
             } else if (i == j && m[i][j] != i + 1) {
@@ -118,7 +119,7 @@ void symmetricMultiply(double* result, double** m, const double* v) {
 //      }
 //    }
 //  }
-
+//
 #pragma omp parallel for
     for (int i = 0; i < MATRIXSIZE; i++) {
         for (int j = 0; j < MATRIXSIZE; j++) {
