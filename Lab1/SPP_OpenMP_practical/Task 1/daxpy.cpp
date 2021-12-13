@@ -12,7 +12,7 @@ bool checkEqualityDaxpy(const vector<double>& v1, const vector<double>& v2) {
     }
 
     for (int i = 0; i < v1.size(); i++) {
-        if ((v1[i] - v2[i]) / v1[i] > 0.005) {
+        if ((abs(v1[i] - v2[i]) / v1[i] > 0.005) {
             cerr << "Error at " << i << ":" << v1[i] << " vs. " << v2[i] << endl;
             return false;
         }
