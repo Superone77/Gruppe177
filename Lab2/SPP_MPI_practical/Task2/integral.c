@@ -48,24 +48,36 @@ int main(int argc, char** argv) {
         double x = -1.0+1.0*rand()/RAND_MAX *2;
         temp += 2.0 / (1 + x * x);
   }
-  if(world_rank!=0){
-        int error = MPI_Send(&temp, 1, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD);
-        if(error != MPI_SUCCESS){
-            printf("process %d fail to send \n", world_rank);
+//  if(world_rank!=0){
+//        int error = MPI_Send(&temp, 1, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD);
+//        if(error != MPI_SUCCESS){
+//            printf("process %d fail to send \n", world_rank);
+//        }
+//  }
+//  if(world_rank == 0){
+//      result+=temp;
+//      for(int i = 1; i<world_size;i++){
+//          double rcv;
+//          MPI_Recv(&rcv,1,MPI_DOUBLE,i,1,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+//          result+=rcv;
+//      }
+//  }
+    for(int stride = 1; stride < world_size; stride*=2)
+    {
+        if(world_rank%(2*stride)==0) {
+            double rcv;
+            MPI_Recv(&rcv, 1, MPI_DOUBLE, world_rank + stride, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            temp += rcv;
         }
-  }
-  if(world_rank == 0){
-      result+=temp;
-      for(int i = 1; i<world_size;i++){
-          double rcv;
-          MPI_Recv(&rcv,1,MPI_DOUBLE,i,1,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-          result+=rcv;
-      }
-  }
+        else if((world_rank + stride) % (2 * stride) == 0) {
+            MPI_Send(&temp, 1, MPI_DOUBLE, world_rank - stride, 1, MPI_COMM_WORLD);
+        }
+        MPI_Barrier(MPI_COMM_WORLD);
+    }
 
 
   if (world_rank == 0) {
-      result *= h;
+      result = temp * h;
     printf("%f\n", result);
   }
 

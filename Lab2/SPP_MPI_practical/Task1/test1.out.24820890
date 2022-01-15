@@ -1,3 +1,0 @@
-mpicc -O2 integral.c -o integral
-Running with 8 processes
-3.141582
