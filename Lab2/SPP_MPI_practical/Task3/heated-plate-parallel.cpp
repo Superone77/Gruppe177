@@ -132,8 +132,8 @@ int main(int argc, char *argv[])
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
     MPI_Comm_size(MPI_COMM_WORLD,&size);
-    if(size>M-2){
-        size = M-2;
+    if(size>M){
+        cout<<"the number of rows is less than processes"<<endl;
     }
     int effectivRow = ceil((double)(M-2)/(double)size);
     int rowProProcess = effectivRow+2;
@@ -268,33 +268,6 @@ int main(int argc, char *argv[])
   // processes stop at the same iteration
 
   while(epsilon<=diff){
-//      if(myid == size-1){
-//          cout<<"myid = "<<myid<<endl;
-//          for(int j = 0; j<end+1;j++){
-//              for(i=0;i<N;i++) {
-//                  cout<<w[N * j+i]<<' ';
-//              }
-//              cout<<endl;
-//          }
-//      }
-//      else if(myid == 0){
-//          cout<<"myid = 0"<<endl;
-//          for(int j = 0; j<rowProProcess;j++){
-//              for(i=0;i<N;i++) {
-//                  cout<<w[N * j+i]<<' ';
-//              }
-//              cout<<endl;
-//          }
-//
-//      } else
-//          if(myid == 1){
-//          cout<<"myid = "<<myid<<endl;
-//          for(int j = 0; j<rowProProcess;j++){
-//              for(i=0;i<N;i++) {
-//                  cout<<w[N * j+i]<<' ';
-//              }
-//              cout<<endl;
-//          }
 
       if(myid == size-1){
           for(int j = 0; j<end+1;j++){
@@ -383,34 +356,6 @@ int main(int argc, char *argv[])
       MPI_Reduce(&loc_diff, &diff, 1, MPI_DOUBLE,MPI_MAX,0,MPI_COMM_WORLD);
 
       MPI_Bcast(&diff, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-      MPI_Barrier(MPI_COMM_WORLD);
-//      if(myid == size-1){
-//        cout<<"myid = "<<myid<<endl;
-//        for(int j = 0; j<end+1;j++){
-//            for(i=0;i<N;i++) {
-//                cout<<w[N * j+i]<<' ';
-//            }
-//            cout<<endl;
-//        }
-//    }
-//    else if(myid == 0){
-//        cout<<"myid = 0"<<endl;
-//        for(int j = 0; j<rowProProcess;j++){
-//            for(i=0;i<N;i++) {
-//                cout<<w[N * j+i]<<' ';
-//            }
-//            cout<<endl;
-//        }
-//    } else if(myid>0 && myid < size){
-//        cout<<"myid = "<<myid<<endl;
-//        for(int j = 0; j<rowProProcess;j++){
-//            for(i=0;i<N;i++) {
-//                cout<<w[N * j+i]<<' ';
-//            }
-//            cout<<endl;
-//        }
-//    }
-      MPI_Barrier(MPI_COMM_WORLD);
       if(myid == size-1){
           MPI_Sendrecv(w+(coverRow-1)*N, N, MPI_DOUBLE, size-2, 0,w,N,MPI_DOUBLE,size-2,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
       }
@@ -453,32 +398,6 @@ int main(int argc, char *argv[])
       cout << "  Normal end of execution.\n";
   }
     return 0;
-
-    //  Determine the new estimate of the solution at the interior points.
-    //  The new solution W is the average of north, south, east and west
-    //  neighbors.
-    //  TODO: Here you may need parts of the matrix that are part of other processes
-//    for (i = 1; i < M - 1; i++) {
-//      for (j = 1; j < N - 1; j++) {
-//        w[i][j] = (u[i - 1][j] + u[i + 1][j] + u[i][j - 1] + u[i][j + 1]) / 4.0;
-//      }
-//    }
-
-
-//
-//    diff = 0.0;
-//
-//    // TODO: Be aware that each process only computes its local diff here. You may
-//    // need to combine the results from all processes
-//    for (i = 1; i < M - 1; i++) {
-//      for (j = 1; j < N - 1; j++) {
-//        if (diff < fabs(w[i][j] - u[i][j])) {
-//          diff = fabs(w[i][j] - u[i][j]);
-//        }
-//      }
-//    }
-//
-
 #undef M
 #undef N
 }

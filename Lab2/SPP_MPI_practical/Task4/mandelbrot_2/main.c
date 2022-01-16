@@ -53,6 +53,7 @@ int main() {
   data->columns = IMG_WIDTH;
   data->rows = IMG_HEIGHT;
 
+
   if (rank == 0) { // only rank 0 writes the header
     FILE *fp;
     /* Open output file */
