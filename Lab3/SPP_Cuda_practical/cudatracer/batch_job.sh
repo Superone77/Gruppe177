@@ -16,4 +16,7 @@
 # Anschliessend schreiben Sie Ihre eigenen Befehle, wie z.B.
 module purge
 module load cuda
+module load cmake
+cmake .
+make
 ./CUDATracer 2 "CUDATracing/models/Venus.txt" 1
