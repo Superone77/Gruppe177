@@ -31,6 +31,7 @@ cudaError_t setupCuda() {
 }
 
 ////////// END BLOCK: DO NOT TOUCH ANY CODE IN THIS HELPER FUNCTIONS
+
 /*
 * width = Horizontal no. of pixels of rendered image
 * height = Vertical no. of pixels of rendered image
@@ -47,42 +48,44 @@ cudaError_t setupCudaMemory(SplitScene* scene,
 	// Allocate and fill GPU buffers (faces, vertices, result, ...)    .
 	// Buffer for result picture
 	// TODO Aufgabe 1)
-    cudaStatus= cudaMalloc((void**)&result_Buffer,width*height* sizeof(float4));
+	size = width*height;
+    cudaStatus= cudaMalloc((void**)&result_Buffer,size* sizeof(float4));
     if (cudaStatus != cudaSuccess) {
         const char *const err_str = cudaGetErrorString(cudaStatus);
         std::cerr<<"result_Buffer memory allocation failed!"<<std::endl;
         std::cerr << "Cuda error in " << __FILE__ << ":" << __LINE__ - 4
                   << ": " << err_str << " (" << cudaStatus << ")" << std::endl;
-        exit(EXIT_FAILURE);
+		return cudaStatus;
     }
-    cudaMemset((void**)&result_Buffer, 0, width*height* sizeof(float4));
+    cudaMemset(result_Buffer, 0, size* sizeof(float)*4);
     if (cudaStatus != cudaSuccess) {
         const char *const err_str = cudaGetErrorString(cudaStatus);
         std::cerr<<"result_Buffer memory initialization failed!"<<std::endl;
         std::cerr << "Cuda error in " << __FILE__ << ":" << __LINE__ - 4
                   << ": " << err_str << " (" << cudaStatus << ")" << std::endl;
-        exit(EXIT_FAILURE);
+		return cudaStatus;
     }
 
 
     // Buffer for vertices
 
     // TODO Aufgabe 2)
-    cudaMalloc((void**)&vertices_Buffer, sizeof(float4)*(scene->vtxcnt));
+	size = scene->vtxcnt;
+    cudaMalloc((void**)&vertices_Buffer, sizeof(float4)*size);
     if (cudaStatus != cudaSuccess) {
         const char *const err_str = cudaGetErrorString(cudaStatus);
         std::cerr<<"vertices_Buffer memory allocation failed!"<<std::endl;
         std::cerr << "Cuda error in " << __FILE__ << ":" << __LINE__ - 4
                   << ": " << err_str << " (" << cudaStatus << ")" << std::endl;
-        exit(EXIT_FAILURE);
+		return cudaStatus;
     }
-    cudaMemcpy(vertices_Buffer,vertices,sizeof(float4)*(scene->vtxcnt),cudaMemcpyHostToDevice);
+    cudaMemcpy(vertices_Buffer,vertices,sizeof(float)*4*size,cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) {
         const char *const err_str = cudaGetErrorString(cudaStatus);
         std::cerr<<"vertices  memory copying failed!"<<std::endl;
         std::cerr << "Cuda error in " << __FILE__ << ":" << __LINE__ - 4
                   << ": " << err_str << " (" << cudaStatus << ")" << std::endl;
-        exit(EXIT_FAILURE);
+		return cudaStatus;
     }
 
 
@@ -100,13 +103,13 @@ cudaError_t setupCudaMemory(SplitScene* scene,
 	// Copy camera to constant camera_Buffer
 
     // TODO Aufgabe 3)
-    cudaMemcpyToSymbol(camera_Buffer, &camera,8* sizeof(float));
+    cudaMemcpyToSymbol(camera_Buffer, camera,8* sizeof(float));
     if (cudaStatus != cudaSuccess) {
         const char *const err_str = cudaGetErrorString(cudaStatus);
         std::cerr<<"camera_Buffer memory allocation failed!"<<std::endl;
         std::cerr << "Cuda error in " << __FILE__ << ":" << __LINE__ - 4
                   << ": " << err_str << " (" << cudaStatus << ")" << std::endl;
-        exit(EXIT_FAILURE);
+		return cudaStatus;
     }
 
 
@@ -130,13 +133,13 @@ cudaError_t setupCudaMemory(SplitScene* scene,
 	// Copy light to constant light_Buffer
 
     // TODO Aufgabe 3)
-    cudaMemcpyToSymbol(lightdat_Buffer, &lightdat, 12* sizeof(float));
+    cudaMemcpyToSymbol(lightdat_Buffer, lightdat, 12* sizeof(float));
     if (cudaStatus != cudaSuccess) {
         const char *const err_str = cudaGetErrorString(cudaStatus);
         std::cerr<<"lightdat_Buffer memory allocation failed!"<<std::endl;
         std::cerr << "Cuda error in " << __FILE__ << ":" << __LINE__ - 4
                   << ": " << err_str << " (" << cudaStatus << ")" << std::endl;
-        exit(EXIT_FAILURE);
+		return cudaStatus;
     }
 
 
@@ -270,7 +273,23 @@ cudaError_t freeCudaMemory()
 	// Free GPU buffers (faces, vertices, result, ...)   
 	// Buffer for result picture
 
-        // TODO Aufgabe 9
+	// TODO Aufgabe 9
+	cudaStatus = cudaFree(result_Buffer);
+	if (cudaStatus != cudaSuccess) {
+		const char *const err_str = cudaGetErrorString(cudaStatus);
+		std::cerr<<"freeCUDA for result_Buffer failed!!"<<std::endl;
+		std::cerr << "Cuda error in " << __FILE__ << ":" << __LINE__ - 4
+				  << ": " << err_str << " (" << cudaStatus << ")" << std::endl;
+		return cudaStatus;
+	}
+	cudaStatus = cudaFree(vertices_Buffer);
+	if (cudaStatus != cudaSuccess) {
+		const char *const err_str = cudaGetErrorString(cudaStatus);
+		std::cerr<<"freeCUDA for vertices_Buffer failed!"<<std::endl;
+		std::cerr << "Cuda error in " << __FILE__ << ":" << __LINE__ - 4
+				  << ": " << err_str << " (" << cudaStatus << ")" << std::endl;
+		return cudaStatus;
+	}
 
 
 
@@ -343,6 +362,11 @@ __device__ float4 normalizeDirection(float4 d)
 {
     float4 nd;
     // TODO Aufgabe 6
+	float base = sqrt(d.x*d.x+d.y*d.y+d.z*d.z);
+	nd.x = d.x/base;
+	nd.y = d.y/base;
+	nd.z = d.z/base;
+	nd.w = 0.0f;
     return nd;
 }
 
@@ -380,6 +404,11 @@ __device__ float4 reflect3DLA(float4 l, float4 n)
 {
     float4 r;
     // TODO Aufgabe 7
+	r.w = 0.0f;
+	float temp = 2*(l.x*n.x+l.y*n.y+l.z*n.z);
+	r.x = temp*n.x-l.x;
+	r.y = temp*n.y-l.y;
+	r.z = temp*n.z-l.z;
     return r;
 }
 
@@ -388,8 +417,18 @@ Tests whether a 3D Ray hits a bounding Sphere
 */
 __device__ bool rayIntersectsSphere(float4 s, float4 r, float4 o)
 {
-        // TODO Aufgabe 8
-	return true;
+	// TODO Aufgabe 8
+	float4 k;
+	k.x = o.x - s.x;
+	k.y = o.y - s.y;
+	k.z = o.z - s.z;
+	float beta = r.x*k.x+r.y*k.y + r.z*k.z;
+	beta = beta*beta;
+	float gama = (k.x*k.x+k.y*k.y+k.z*k.z)-s.w*s.w;
+	if(beta>=gama)
+		return true;
+	else
+		return false;
 }
 
 /*
@@ -632,8 +671,7 @@ void traceLA(float4* output,
     if(globalIdy >= resinfo.y) return;
 	int globalIdSerial = globalIdy*resinfo.x+globalIdx;
 
-
-	// BLOCK TO TEST INDICES
+//	// BLOCK TO TEST INDICES
 //	float4 testcol = {0,0,0,0};
 //	testcol.x = globalIdx / (float)(resinfo.x + 1);
 //	testcol.y = globalIdy / (float)(resinfo.x + 1);
@@ -655,7 +693,7 @@ void traceLA(float4* output,
 	col.z = 0.0f;
 
 	float4 sp; // Schnittpunkt mit der Dreiecksfläche
-	float4 n; // Interpolierte Flächennormale 
+	float4 n; // Interpolierte Flächennormale
 	int objID = -1;
 
 	// Schnitttest
@@ -771,19 +809,20 @@ cudaError_t traceWithCuda(float* result, const int blocks_x, const int blocks_y,
 	// Copy output from GPU to host
 
     // TODO Aufgabe 4)
-    cudaStatus = cudaMemcpy(result,result_Buffer, width*height* sizeof(float4),cudaMemcpyDeviceToHost);
+    cudaStatus = cudaMemcpy(result,result_Buffer, width*height* sizeof(float)*4,cudaMemcpyDeviceToHost);
     if (cudaStatus != cudaSuccess) {
             const char *const err_str = cudaGetErrorString(cudaStatus);
             std::cerr<<"result memory copy failed!"<<std::endl;
             std::cerr << "Cuda error in " << __FILE__ << ":" << __LINE__ - 4
                       << ": " << err_str << " (" << cudaStatus << ")" << std::endl;
-            exit(EXIT_FAILURE);
+		return cudaStatus;
     }
 
     cudaStatus = freeCudaMemory();
 	if (cudaStatus != cudaSuccess) {
 		fprintf(stderr, "freeCudaMemory failed!");
 	}
+	std::cout<<" finished"<<std::endl;
 
 	return cudaStatus;
 }
