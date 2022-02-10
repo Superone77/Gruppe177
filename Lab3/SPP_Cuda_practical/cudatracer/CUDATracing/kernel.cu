@@ -760,14 +760,23 @@ cudaError_t traceWithCuda(float* result, const int blocks_x, const int blocks_y,
 
 	// TODO Aufgabe 10
 	// Replace this default with Aufgabe 10:
-	dim3 threads(8, 8);
-	dim3 grid(width / threads.x, height / threads.y);
+//	dim3 threads(8, 8);
+//	dim3 grid(width / threads.x, height / threads.y);
+    int blockSize;
+    int minGridSize;
+    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, traceLA,0, height*width);
+    cout<<"blocksize:"<<blockSize<<endl;
+    cout<<"minGridSize: "<<minGridSize<<endl;
+    int temp = sqrt(blockSize);
+    dim3 threads(32,28);
+    dim3 grid(width / threads.x, height / threads.y);
 
 
 	cout << "Executing Kernel with grid ("
 		<< grid.x << "," << grid.y << ")"
-		<< " and block (" << threads.x << "," << threads.y << ")" 
+		<< " and block (" << threads.x << "," << threads.y << ")"
 		<< endl;
+
 
 	cudaEventRecord(start,0);
 	// Execute
